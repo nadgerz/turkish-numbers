@@ -20,14 +20,36 @@ const dictionary = {
   90: 'doksan',
 }
 
+function convertDigits(num) {
+  const digits = num.toString().replace('-', '').split('')
+
+  let words = digits
+    .map(
+      (digit, index) =>
+        dictionary[digit * Math.pow(10, digits.length - 1 - index)],
+    )
+    .join(' ')
+
+  return num < 0 ? `eksi ${words}` : words
+}
+
 function getTurkishNumber(num) {
-  if (!(num >= 0 && num <= 99)) throw new Error('Please give a number between 0 and 100.')
+  if (num <= MIN || num >= MAX)
+    throw new Error(`Please give a number between ${MIN} and ${MAX}.`)
 
   if (num in dictionary) return dictionary[num]
 
-  const digits = num.toString().split('')
-
-  return digits.map((digit, index) => dictionary[digit * Math.pow(10, digits.length - 1 - index)]).join(' ')
+  return convertDigits(num)
 }
 
-module.exports = getTurkishNumber
+//const MIN = -100
+//const MAX = 1000
+
+const MIN = 0
+const MAX = 100
+
+module.exports = {
+  MIN,
+  MAX,
+  getTurkishNumber,
+}
